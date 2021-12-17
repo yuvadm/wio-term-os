@@ -1,16 +1,14 @@
-#include"TFT_eSPI.h" //include TFT LCD library
+#include"TFT_eSPI.h"
 
-TFT_eSPI tft; //initialize TFT LCD
+TFT_eSPI tft;
 
 void setup() {
-  tft.begin(); //start TFT LCD
-  tft.setRotation(3); //set screen rotation
-
-  tft.fillScreen(TFT_RED); //fill background
-
-  tft.setTextColor(TFT_BLACK); //set text color
-  tft.setTextSize(4); //set text size
-  tft.drawString("Hello world!",0,0); //draw text string
+  tft.begin();
+  tft.setRotation(3);
+  tft.fillScreen(TFT_BLACK);
+  tft.setTextColor(TFT_GREEN);
+  tft.setTextSize(4);
+  tft.drawString("Hello world!", 20, 100);
 
 }
 
