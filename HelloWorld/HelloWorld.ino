@@ -9,23 +9,36 @@ ADXL335 axl;
 
 #define max_size 50
 
+int mode = 0;
+int next_mode = 0;
+
 doubles accelerator_readings[3];
 TFT_eSprite spr = TFT_eSprite(&tft);
 
-void setup() {
-  tft.begin();
-  tft.setRotation(3);
-  tft.fillScreen(TFT_BLACK);
-  tft.setTextColor(TFT_GREEN);
-  tft.setTextSize(4);
-  tft.drawString("Hello world!", 20, 100);
-
-  spr.createSprite(TFT_HEIGHT, TFT_WIDTH);
-
-  axl.begin();
+void show_splash() {
+    mode = 0;
+    tft.fillScreen(TFT_BLACK);
+    tft.setTextColor(TFT_GREEN);
+    tft.setTextSize(4);
+    tft.drawString("Hello world!", 20, 100);
 }
 
-void loop() {
+void setup() {
+    tft.begin();
+    tft.setRotation(3);
+    show_splash();
+
+    spr.createSprite(TFT_HEIGHT, TFT_WIDTH);
+
+    pinMode(WIO_KEY_A, INPUT);
+    pinMode(WIO_KEY_B, INPUT);
+    pinMode(WIO_KEY_C, INPUT);
+
+    axl.begin();
+}
+
+void show_accelerometer_readings() {
+    mode = 1;
     spr.fillSprite(TFT_WHITE);
     float ax = axl.getAccelerationX();
     float ay = axl.getAccelerationY();
@@ -59,5 +72,27 @@ void loop() {
     content.draw();
 
     spr.pushSprite(0, 0);
+}
+
+void process_input() {
+    if (digitalRead(WIO_KEY_C) == LOW) {
+        next_mode = 0;
+    }
+    if (digitalRead(WIO_KEY_B) == LOW) {
+        next_mode = 1;
+    }
+    if (digitalRead(WIO_KEY_A) == LOW) {
+        next_mode = 1;
+    }
+}
+
+void loop() {
+    process_input();
+    if (next_mode == 0 && mode != 0) {
+        show_splash();
+    }
+    if (next_mode == 1) {
+        show_accelerometer_readings();
+    }
     delay(50);
 }
